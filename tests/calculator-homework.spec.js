@@ -1,18 +1,30 @@
 const { test, expect } = require('@playwright/test');
+const {calcStartPage} = require('../pages/calcStartPage');
+
+test.describe('Calculator test suite', () => {
+  let page;
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+      startPage = new calcStartPage(page);
+      
+  });
+  test.beforeEach(async () => {
+    await startPage.goto();
+  });
 
 const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
     buildOptions.forEach(buildOption => {
-    test(`Check if Build Option ${buildOption} has Second Number field`, async ({ page }) => {
-        await page.goto('https://testsheepnz.github.io/BasicCalculator');
+    test(`Check if Build Option ${buildOption} has Second Number field`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         const isFieldVisible = await page.isVisible('#number2Field');
         expect(isFieldVisible).toBe(true)
     });
   }); 
 
+
   buildOptions.forEach(buildOption => {
-    test(`Check if Add function provides the right answers with Build Option ${buildOption}`, async ({ page }) => {
-        await page.goto('https://testsheepnz.github.io/BasicCalculator');
+    test(`Check if Add function provides the right answers with Build Option ${buildOption}`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.click('input[name="number1"]');
         await page.fill('input[name="number1"]', '1');
@@ -27,8 +39,7 @@ const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 
   buildOptions.forEach(buildOption => {
-    test(`Check that Build Option ${buildOption} returns correct error when dividing by 0`, async ({ page }) => {
-        await page.goto('https://testsheepnz.github.io/BasicCalculator');
+    test(`Check that Build Option ${buildOption} returns correct error when dividing by 0`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.click('input[name="number1"]');
         await page.fill('input[name="number1"]', '1');
@@ -45,8 +56,7 @@ const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 
   buildOptions.forEach(buildOption => {
-    test(`Checks that Build Option ${buildOption} shows the correct error for non-numerical values`, async ({ page }) => {
-        await page.goto('https://testsheepnz.github.io/BasicCalculator');
+    test(`Checks that Build Option ${buildOption} shows the correct error for non-numerical values`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.click('input[name="number1"]');
         await page.fill('input[name="number1"]', 'a');
@@ -61,19 +71,17 @@ const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   }); 
 
   buildOptions.forEach(buildOption => {
-    test(`Check that Build Option ${buildOption} multiplies correctly`, async ({ page }) => {
-        await page.goto('https://testsheepnz.github.io/BasicCalculator');
+    test(`Check that Build Option ${buildOption} multiplies correctly`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.selectOption('select[name="selectOperation"]', '2');
         await page.click('input[name="number1"]');
-        await page.fill('input[name="number1"]', parseInt('Math.random() * 5'));
+        document.getElementById(('input[name="number1"]').value = Math.random() * 5);
         await page.click('input[name="number2"]');
-        await page.fill('input[name="number1"]', parseInt('Math.random() * 5'));
+        document.getElementById(('input[name="number2"]').value = Math.random() * 5);
         await page.click('input:has-text("Calculate")');
-        const valueOne = await page.getElementById(('input[name="number1"]').value = Math.random()*5);
-        const valueTwo = await page.getElementById(('input[name="number2"]').value = Math.random()*5);
         const value = await page.$eval('#numberAnswerField', (el) => el.value);
         console.log(value);
         expect(value).toEqual(valueOne * valueTwo);
     });
   }); 
+});
