@@ -15,7 +15,7 @@ test.describe('Calculator test suite', () => {
 const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     buildOptions.forEach(buildOption => {
-    test(`Check if Build Option ${buildOption} has Second Number field`, async () => {
+    test(`Check if Build Option ${buildOption} has a Second Number field`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         const isFieldVisible = await page.isVisible('#number2Field');
         expect(isFieldVisible).toBe(true)
@@ -24,7 +24,7 @@ const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 
   buildOptions.forEach(buildOption => {
-    test(`Check if Add function provides the right answers with Build Option ${buildOption}`, async () => {
+    test(`Check if Add function provides the correct answers with Build Option ${buildOption}`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.click('input[name="number1"]');
         await page.fill('input[name="number1"]', '1');
@@ -70,18 +70,47 @@ const buildOptions = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     });
   }); 
 
-  buildOptions.forEach(buildOption => {
+  /*buildOptions.forEach(buildOption => {
     test(`Check that Build Option ${buildOption} multiplies correctly`, async () => {
         await page.selectOption('select[name="selectBuild"]', (buildOption));
         await page.selectOption('select[name="selectOperation"]', '2');
         await page.click('input[name="number1"]');
-        document.getElementById(('input[name="number1"]').value = Math.random() * 5);
+        const oneValue = Math.floor(Math.random() * 5);
+        const valueOne = await page.fill('input[name="number1"]', oneValue.toString());
+        let valueOne = await page.fill('input[name="number1"]', `${Math.floor(Math.random() * 5)}`);
+        console.log(valueOne);
         await page.click('input[name="number2"]');
-        document.getElementById(('input[name="number2"]').value = Math.random() * 5);
+        const valueTwo =await page.fill('input[name="number2"]', oneValue.toString());
+        valueTwo = await page.fill('input[name="number2"]', `${Math.floor(Math.random() * 5)}`);
+        console.log(valueTwo);
         await page.click('input:has-text("Calculate")');
-        const value = await page.$eval('#numberAnswerField', (el) => el.value);
-        console.log(value);
-        expect(value).toEqual(valueOne * valueTwo);
+        const randomValue = await page.$eval('#numberAnswerField', (el) => el.value);
+        console.log(randomValue);
+        expect(randomValue).toEqual(valueOne * valueTwo);
+    });
+  });*/
+
+
+  buildOptions.forEach(buildOption => {
+    test(`Check that Build Option ${buildOption} multiplies correctly 2 times in a row`, async () => {
+        await page.selectOption('select[name="selectBuild"]', (buildOption));
+        await page.selectOption('select[name="selectOperation"]', '2');
+        await page.click('input[name="number1"]');
+        let valueOne = await page.fill('input[name="number1"]', `1`);
+        await page.click('input[name="number2"]');
+        let valueTwo = await page.fill('input[name="number2"]', `3`);
+        await page.click('input:has-text("Calculate")');
+        const randomValueOne = await page.$eval('#numberAnswerField', (el) => el.value);
+        console.log(randomValueOne);
+        let valueThree = await page.fill('input[name="number1"]', `2`);
+        await page.click('input[name="number2"]');
+        let valueFour = await page.fill('input[name="number2"]', `4`);
+        await page.click('input:has-text("Calculate")');
+        const randomValueTwo = await page.$eval('#numberAnswerField', (el) => el.value);
+        console.log(randomValueTwo);      
+        expect(randomValueOne).toEqual('3');
+        expect(randomValueTwo).toEqual('8');
     });
   }); 
 });
+
